@@ -1,6 +1,7 @@
 package com.example.addressbook;
 
 import com.example.addressbook.data.PersonContainer;
+import com.example.addressbook.data.SearchFilter;
 import com.example.addressbook.ui.HelpWindow;
 import com.example.addressbook.ui.ListView;
 import com.example.addressbook.ui.NavigationTree;
@@ -164,6 +165,10 @@ public class AddressbookApplication extends Application implements ItemClickList
 
 					setMainContent(getSearchView());
 				}
+				else if (itemId instanceof SearchFilter) {
+					search((SearchFilter) itemId);
+				}
+
 			}
 		}
 	}
@@ -191,6 +196,25 @@ public class AddressbookApplication extends Application implements ItemClickList
 		setMainContent(getListView());
 		personForm.addContact();
 	}
+
+	public void saveSearch(SearchFilter searchFilter) {
+
+		tree.addItem(searchFilter);
+		tree.setParent(searchFilter, NavigationTree.SEARCH);
+		tree.setChildrenAllowed(searchFilter, false);
+		tree.expandItem(NavigationTree.SEARCH);
+		tree.setValue(searchFilter);
+
+	}
+
+	public void search(SearchFilter searchFilter) {
+
+		getDataSource().removeAllContainerFilters();
+		getDataSource().addContainerFilter(searchFilter.getPropertyId(),
+				searchFilter.getTerm(), true, false);
+		setMainContent(getListView());
+	}
+
 
 
 }
